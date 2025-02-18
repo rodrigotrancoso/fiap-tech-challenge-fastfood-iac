@@ -3,14 +3,20 @@ resource "aws_cognito_user_pool" "fastfood_user_pool" {
   name = "fastfood-user-pool"
 
   schema {
-    name                = "cpf"
-    attribute_data_type = "String"
-    mutable             = true
-    required            = false
+    attribute_data_type      = "String"
+    developer_only_attribute = false
+    mutable                  = true
+    name                     = "cpf"
+    required                 = false
+    string_attribute_constraints {}
   }
 
   # Se quiser validar automaticamente o e-mail, adicione "email" aqui
   auto_verified_attributes = [] # Estamos apenas verificando o CPF
+
+  lifecycle {
+    ignore_changes = [ schema ]
+  }
 }
 
 # Cognito User Pool Client
