@@ -39,8 +39,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: ${{ vars.AWS_REGION }}
         
-      - name: Terraform Apply (Conditional)
-        if: steps.terraform-plan.outcome == 'successs'
+      - name: Terraform Apply
         run: |
           terraform apply -auto-approve tfplan \
             -var "aws_access_key_id=${{ secrets.AWS_ACCESS_KEY_ID }}" \
