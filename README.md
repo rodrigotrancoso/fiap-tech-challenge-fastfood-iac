@@ -1,25 +1,52 @@
-# 🏗️ FIAP Tech Challenge - Infraestrutura como Código (IaC)
+# 🍔 FastFood - Sistema de Autoatendimento Inteligente
 
-Este repositório contém toda a infraestrutura necessária para rodar os **três microserviços** do FIAP Tech Challenge, utilizando **Terraform** para provisionar recursos na AWS.
+A FastFood é uma lanchonete de bairro que está crescendo rapidamente devido ao seu grande sucesso. No entanto, com a expansão, a gestão de pedidos tornou-se um desafio, resultando em confusões na cozinha, atrasos na entrega e clientes insatisfeitos. Para resolver esse problema, desenvolvemos um **sistema de autoatendimento baseado em microserviços e infraestrutura escalável na AWS**.
 
-Os microserviços disponíveis são:
+## 🎯 Solução
+O sistema de autoatendimento da FastFood foi projetado para garantir que os pedidos sejam feitos com precisão, gerenciados de forma eficiente e entregues sem falhas. Ele possui as seguintes funcionalidades:
 
-- **MS de Produtos** [(fiap-tech-challenge-ms-product)](https://github.com/rodrigotrancoso/fiap-tech-challenge-ms-product) → Banco RDS PostgreSQL.
-- **MS de Pedidos** [(fiap-tech-challenge-ms-order)](https://github.com/rodrigotrancoso/fiap-tech-challenge-ms-order) → Banco DynamoDB.
-- **MS de Pagamentos** [(fiap-tech-challenge-ms-payment)](https://github.com/rodrigotrancoso/fiap-tech-challenge-ms-payment) → Banco RDS PostgreSQL e integração com MercadoPago.
+✅ **Pedido Online:** Os clientes podem montar combos personalizados diretamente na interface, escolhendo:
+- Lanche
+- Acompanhamento
+- Bebida
+
+✅ **Pagamento Integrado:** Através de um QR Code gerado pelo Mercado Pago, garantindo praticidade e segurança.
+
+✅ **Rastreamento de Pedido:** O cliente pode acompanhar seu pedido em tempo real nas seguintes etapas:
+- Recebido
+- Em preparação
+- Pronto
+- Finalizado
+
+✅ **Gestão Inteligente:** O estabelecimento pode:
+- Gerenciar clientes e campanhas promocionais
+- Controlar produtos e categorias (Lanches, Acompanhamentos, Bebidas e Sobremesas)
+- Monitorar pedidos em andamento e tempos de espera
+
+Para tornar essa solução possível, desenvolvemos **três microsserviços principais** e toda a infraestrutura necessária para operá-los de forma escalável e segura na AWS.
+
+---
+
+# 🏗️ Infraestrutura como Código (IaC)
+
+Utilizamos **Terraform** para provisionar toda a infraestrutura na AWS, garantindo **automação, escalabilidade e segurança**. O sistema é composto pelos seguintes microsserviços:
+
+- **[MS de Produtos](https://github.com/rodrigotrancoso/fiap-tech-challenge-ms-product)** → Gerencia os produtos e se conecta ao **RDS PostgreSQL**.
+- **[MS de Pedidos](https://github.com/rodrigotrancoso/fiap-tech-challenge-ms-order)** → Gerencia os pedidos e utiliza o **DynamoDB** para armazenamento.
+- **[MS de Pagamentos](https://github.com/rodrigotrancoso/fiap-tech-challenge-ms-payment)** → Processa pagamentos e se conecta ao **RDS PostgreSQL e MercadoPago**.
 
 ---
 
 ## 🚀 Tecnologias Utilizadas
 - **Terraform** - Infraestrutura como código
-- **AWS EKS** - Cluster Kubernetes
-- **AWS RDS PostgreSQL** - Banco relacional
-- **AWS DynamoDB** - Banco NoSQL
-- **AWS API Gateway** - Roteamento de chamadas
-- **AWS Cognito** - Autenticação
-- **AWS Lambda** - Execução de funções serverless
-- **AWS VPC** - Rede isolada para os serviços
-- **GitHub Actions** - CI/CD
+- **AWS EKS** - Cluster Kubernetes para microsserviços
+- **AWS RDS PostgreSQL** - Banco relacional para produtos e pagamentos
+- **AWS DynamoDB** - Banco NoSQL para pedidos
+- **AWS API Gateway** - Roteamento de chamadas HTTP
+- **AWS Cognito** - Autenticação de usuários
+- **AWS Lambda** - Funções serverless
+- **AWS VPC** - Rede isolada para segurança
+- **GitHub Actions** - CI/CD para automação de deploys
 
 ---
 
@@ -30,16 +57,16 @@ Os microserviços disponíveis são:
 │   ├── 📜 provider.tf  # Configuração do provedor AWS
 │   ├── 📜 vpc.tf  # Configuração da Virtual Private Cloud (VPC) e subnets
 │   ├── 📜 eks.tf  # Cluster Kubernetes (EKS) para rodar os microserviços
-│   ├── 📜 db-postgres.tf  # Banco de dados RDS PostgreSQL para os MS de Produtos e Pagamentos
-│   ├── 📜 db-order-dynamodb.tf  # Banco de dados DynamoDB para o MS de Pedidos
-│   ├── 📜 api-gateway.tf  # Configuração do API Gateway para roteamento de chamadas HTTP
-│   ├── 📜 cognito.tf  # Configuração do AWS Cognito para autenticação dos usuários
-│   ├── 📜 iamrole-for-db-postgres.tf  # IAM para acesso ao RDS pelos serviços no Kubernetes
-│   ├── 📜 keypair.tf  # Criação de chave SSH para acesso a instâncias, se necessário
-│   ├── 📜 outputs.tf  # Definição das saídas do Terraform (ex.: endpoints gerados)
-│   ├── 📜 variables.tf  # Definição de variáveis para parametrizar a infraestrutura
+│   ├── 📜 db-postgres.tf  # Banco de dados RDS PostgreSQL
+│   ├── 📜 db-order-dynamodb.tf  # Banco DynamoDB para pedidos
+│   ├── 📜 api-gateway.tf  # API Gateway para roteamento de chamadas HTTP
+│   ├── 📜 cognito.tf  # AWS Cognito para autenticação
+│   ├── 📜 iamrole-for-db-postgres.tf  # IAM para acesso ao RDS
+│   ├── 📜 keypair.tf  # Chave SSH para acesso a instâncias
+│   ├── 📜 outputs.tf  # Definição das saídas do Terraform
+│   ├── 📜 variables.tf  # Variáveis para configuração da infraestrutura
 ├── 📁 k8s
-│   ├── 📜 k8s-secrets.tf  # Secrets para conexão aos bancos de dados
+│   ├── 📜 k8s-secrets.tf  # Secrets para armazenar credenciais de banco
 ├── 📁 init-postgres
 │   ├── 📜 init-product.sql  # Script de inicialização do BD de Produtos
 │   ├── 📜 init-payment.sql  # Script de inicialização do BD de Pagamentos
@@ -66,61 +93,31 @@ aws configure
 ```
 
 ### 3️⃣ **Inicializar o Terraform**
-No diretório onde estão os arquivos do Terraform, execute:
 ```sh
 terraform init
 ```
-Este comando baixa os plugins necessários e prepara o ambiente para a execução.
 
 ### 4️⃣ **Criar um Plano de Execução**
 ```sh
 terraform plan -out=tfplan
 ```
-Isso cria um plano detalhado de todas as alterações que o Terraform fará na AWS, ajudando a visualizar os recursos antes da criação.
 
 ### 5️⃣ **Aplicar a Infraestrutura**
 ```sh
 terraform apply tfplan
 ```
-Este comando cria todos os recursos descritos nos arquivos do Terraform.
 
 ---
 
 ## 📌 Recursos Criados
-A infraestrutura criada pelo Terraform inclui:
-
-### ✅ **Virtual Private Cloud (VPC)**
-- Criada para isolar e organizar a comunicação entre os serviços.
-- Contém **subnets públicas e privadas** para diferentes recursos.
-- Associada a um **Internet Gateway** para permitir acesso externo.
-
-### ✅ **Cluster Kubernetes (EKS)**
-- Um cluster gerenciado pela AWS para rodar os três microserviços.
-- Configuração de segurança para acesso restrito e comunicação entre os serviços.
-
-### ✅ **Banco de Dados AWS RDS PostgreSQL**
-- Criado para armazenar os dados dos MS de Produtos e MS de Pagamentos.
-- Configurado em subnets privadas para segurança.
-
-### ✅ **Banco de Dados AWS DynamoDB**
-- Criado para armazenar pedidos no MS de Pedidos.
-- Operação altamente escalável e gerenciada pela AWS.
-
-### ✅ **AWS API Gateway**
-- Criado para rotear as chamadas HTTP entre os clientes e os microserviços.
-- Mapeia os endpoints `/products`, `/orders` e `/payments` para os serviços correspondentes.
-
-### ✅ **AWS Cognito**
-- Gerencia autenticação e autorização de usuários.
-- Permite que os serviços autentiquem chamadas protegidas.
-
-### ✅ **AWS IAM Roles e Policies**
-- Permissões configuradas para os serviços acessarem os bancos de dados.
-- Roles específicas para integração segura entre os serviços e a infraestrutura.
-
-### ✅ **Secrets no Kubernetes**
-- Secrets criados no Kubernetes para armazenar credenciais dos bancos de dados.
-- Garantia de segurança no armazenamento de dados sensíveis.
+- **VPC** com subnets públicas e privadas.
+- **Cluster Kubernetes (EKS)** para os microserviços.
+- **AWS RDS PostgreSQL** para produtos e pagamentos.
+- **AWS DynamoDB** para pedidos.
+- **AWS API Gateway** para roteamento de chamadas HTTP.
+- **AWS Cognito** para autenticação de usuários.
+- **IAM Roles e Policies** para controle de acesso.
+- **Secrets no Kubernetes** para armazenar credenciais.
 
 ---
 
@@ -132,11 +129,9 @@ Este repositório possui **CI/CD** automatizado:
 ---
 
 ## 🗑️ Como Remover a Infraestrutura
-Para destruir todos os recursos criados na AWS, execute:
 ```sh
 terraform destroy -auto-approve
 ```
-Isso remove completamente todos os serviços provisionados pelo Terraform.
 
 ---
 
